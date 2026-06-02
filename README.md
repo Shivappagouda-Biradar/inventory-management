@@ -2,6 +2,13 @@
 
 A full-stack production-ready application for managing products, customers, and orders.
 
+## 🌐 Live Deployment
+
+- **Frontend**: https://polite-daskalos-b9113b.netlify.app
+- **Backend API**: https://inventory-backend-lx2t.onrender.com
+- **API Documentation**: https://inventory-backend-lx2t.onrender.com/docs
+- **Docker Hub Image**: https://hub.docker.com/r/shivu682/inventory-backend
+
 ## Stack
 - **Frontend**: React 18 + Vite + Recharts + React Router
 - **Backend**: Python 3.11 + FastAPI + SQLAlchemy
