@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from app.database import Base, engine
 from app.routers import products, customers, orders, dashboard
 
@@ -10,6 +11,9 @@ app = FastAPI(
     title="Inventory & Order Management API",
     description="Production-ready API for managing products, customers, and orders",
     version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
 )
 
 app.add_middleware(
@@ -34,3 +38,8 @@ def root():
 @app.get("/health", tags=["Health"])
 def health():
     return {"status": "healthy"}
+
+
+@app.get("/api", tags=["Health"], include_in_schema=False)
+def api_redirect():
+    return RedirectResponse(url="/docs")
