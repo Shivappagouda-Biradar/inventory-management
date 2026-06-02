@@ -7,7 +7,13 @@ A full-stack production-ready application for managing products, customers, and 
 - **Frontend**: https://polite-daskalos-b9113b.netlify.app
 - **Backend API**: https://inventory-backend-lx2t.onrender.com
 - **API Documentation**: https://inventory-backend-lx2t.onrender.com/docs
-- **Docker Hub Image**: https://hub.docker.com/r/shivu682/inventory-backend
+- **Docker Hub Image**: shivu682/inventory-backend:latest
+
+> **Note**: The Docker image can be built locally using:
+> ```bash
+> docker build -t shivu682/inventory-backend:latest ./backend
+> docker push shivu682/inventory-backend:latest
+> ```
 
 ## Stack
 - **Frontend**: React 18 + Vite + Recharts + React Router
