@@ -3,28 +3,44 @@
 A full-stack production-ready application for managing products, customers, and orders.
 
 ## Stack
-- **Frontend**: React 18 + React Router + Axios
-- **Backend**: Python 3.11 + FastAPI
-- **Database**: PostgreSQL 16
+- **Frontend**: React 18 + Vite + Recharts + React Router
+- **Backend**: Python 3.11 + FastAPI + SQLAlchemy
+- **Database**: PostgreSQL (production) / SQLite (local dev)
 - **Containerization**: Docker + Docker Compose
 
 ---
 
-## 🚀 Quick Start (Docker)
+## 🚀 Quick Start (Local — No Docker)
 
 ```bash
-# 1. Copy environment file
-cp .env.example .env
+# Backend
+cd backend
+python -m venv .venv
+.venv\Scripts\activate        # Windows
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
 
-# 2. Edit .env with your values (optional for local dev)
-
-# 3. Build and start all services
-docker compose up --build
-
-# Frontend → http://localhost:3000
-# Backend API → http://localhost:8000
-# API Docs → http://localhost:8000/docs
+# Frontend (new terminal)
+cd frontend
+npm install
+npm run dev
 ```
+
+- Frontend → http://localhost:3000
+- Backend  → http://localhost:8000
+- API Docs → http://localhost:8000/docs
+
+---
+
+## 🐳 Quick Start (Docker)
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+- Frontend → http://localhost:3000
+- Backend  → http://localhost:8000
 
 ---
 
@@ -34,11 +50,11 @@ docker compose up --build
 .
 ├── backend/
 │   ├── app/
-│   │   ├── main.py          # FastAPI app entry point
+│   │   ├── main.py          # FastAPI entry point + CORS
 │   │   ├── config.py        # Settings / env vars
 │   │   ├── database.py      # SQLAlchemy engine + session
-│   │   ├── models.py        # DB models
-│   │   ├── schemas.py       # Pydantic schemas
+│   │   ├── models.py        # DB models (Product, Customer, Order, OrderItem)
+│   │   ├── schemas.py       # Pydantic schemas + validators
 │   │   └── routers/
 │   │       ├── products.py
 │   │       ├── customers.py
@@ -49,17 +65,20 @@ docker compose up --build
 ├── frontend/
 │   ├── src/
 │   │   ├── pages/
-│   │   │   ├── Dashboard.js
-│   │   │   ├── Products.js
-│   │   │   ├── Customers.js
-│   │   │   ├── Orders.js
-│   │   │   └── OrderDetail.js
-│   │   ├── api.js
-│   │   ├── App.js
-│   │   └── index.js
+│   │   │   ├── Dashboard.jsx   # Charts + KPI cards
+│   │   │   ├── Products.jsx
+│   │   │   ├── Customers.jsx
+│   │   │   ├── Orders.jsx
+│   │   │   └── OrderDetail.jsx
+│   │   ├── api.js              # Axios API calls
+│   │   ├── App.jsx             # Router + sidebar layout
+│   │   └── main.jsx
 │   ├── Dockerfile
-│   └── nginx.conf
+│   ├── nginx.conf
+│   ├── vercel.json
+│   └── netlify.toml
 ├── docker-compose.yml
+├── render.yaml
 └── .env.example
 ```
 
@@ -70,55 +89,107 @@ docker compose up --build
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/` | Health check |
+| GET | `/health` | Health status |
 | **Products** | | |
 | POST | `/products/` | Create product |
-| GET | `/products/` | List products |
-| GET | `/products/{id}` | Get product |
+| GET | `/products/` | List all products |
+| GET | `/products/{id}` | Get product by ID |
 | PUT | `/products/{id}` | Update product |
 | DELETE | `/products/{id}` | Delete product |
 | **Customers** | | |
 | POST | `/customers/` | Create customer |
-| GET | `/customers/` | List customers |
-| GET | `/customers/{id}` | Get customer |
+| GET | `/customers/` | List all customers |
+| GET | `/customers/{id}` | Get customer by ID |
 | DELETE | `/customers/{id}` | Delete customer |
 | **Orders** | | |
 | POST | `/orders/` | Create order |
-| GET | `/orders/` | List orders |
+| GET | `/orders/` | List all orders |
 | GET | `/orders/{id}` | Get order details |
-| DELETE | `/orders/{id}` | Cancel order |
+| DELETE | `/orders/{id}` | Cancel order (restores stock) |
 | **Dashboard** | | |
-| GET | `/dashboard/stats` | Summary statistics |
+| GET | `/dashboard/stats` | KPIs + charts data |
 
-Interactive docs available at `/docs` (Swagger UI).
+Interactive docs: `/docs` (Swagger UI)
 
 ---
 
-## Business Rules
+## Business Rules Implemented
 
-- Product SKU must be unique
-- Customer email must be unique
-- Quantity cannot be negative
-- Orders fail if stock is insufficient
-- Stock is automatically reduced on order creation
-- Stock is restored when an order is cancelled
-- Total order amount is calculated automatically
+- ✅ Product SKU must be unique
+- ✅ Customer email must be unique
+- ✅ Product quantity cannot be negative
+- ✅ Orders rejected if stock is insufficient
+- ✅ Stock automatically reduced on order creation
+- ✅ Stock restored when order is cancelled
+- ✅ Total order amount calculated automatically by backend
+- ✅ All APIs return proper HTTP status codes (200, 201, 204, 400, 404, 422)
+- ✅ All request data validated via Pydantic before processing
 
 ---
 
 ## Deployment
 
-### Backend → Render
+### 1. Push to GitHub
 
-1. Create a new **Web Service** on [Render](https://render.com)
-2. Connect your GitHub repo, set root directory to `backend/`
-3. Build command: `pip install -r requirements.txt`
-4. Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-5. Add environment variable: `DATABASE_URL` (from a Render PostgreSQL instance)
+```bash
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git push -u origin master
+```
 
-### Frontend → Vercel / Netlify
+### 2. Backend → Render
 
-1. Connect your GitHub repo
-2. Set root directory to `frontend/`
-3. Build command: `npm run build`
-4. Output directory: `build`
-5. Add env variable: `REACT_APP_API_URL=https://your-backend.onrender.com`
+1. Go to https://render.com → New → Web Service
+2. Connect your GitHub repo
+3. Set **Root Directory**: `backend`
+4. **Build Command**: `pip install -r requirements.txt`
+5. **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+6. Add a **PostgreSQL** database on Render (free tier)
+7. Add environment variable: `DATABASE_URL` → use the Internal Database URL from Render Postgres
+8. Deploy — note your backend URL e.g. `https://inventory-backend.onrender.com`
+
+### 3. Backend → Docker Hub
+
+```bash
+# Build image
+docker build -t YOUR_DOCKERHUB_USERNAME/inventory-backend:latest ./backend
+
+# Push to Docker Hub
+docker login
+docker push YOUR_DOCKERHUB_USERNAME/inventory-backend:latest
+```
+
+### 4. Frontend → Vercel
+
+1. Go to https://vercel.com → New Project
+2. Import your GitHub repo
+3. Set **Root Directory**: `frontend`
+4. **Build Command**: `npm run build`
+5. **Output Directory**: `dist`
+6. Add environment variable:
+   - `VITE_API_URL` = `https://your-backend.onrender.com`
+7. Deploy — note your frontend URL
+
+### 5. Frontend → Netlify (alternative)
+
+1. Go to https://netlify.com → Add new site → Import from Git
+2. Set **Base directory**: `frontend`
+3. **Build command**: `npm run build`
+4. **Publish directory**: `dist`
+5. Add environment variable:
+   - `VITE_API_URL` = `https://your-backend.onrender.com`
+6. Deploy
+
+---
+
+## Environment Variables
+
+### Backend
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@host/db` |
+| `SECRET_KEY` | App secret key | any random string |
+
+### Frontend
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `VITE_API_URL` | Backend API base URL | `https://inventory-backend.onrender.com` |
