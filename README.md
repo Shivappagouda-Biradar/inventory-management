@@ -4,7 +4,7 @@ A full-stack production-ready application for managing products, customers, and 
 
 ## 🌐 Live Deployment
 
-- **Frontend**: https://fascinating-treacle-07ce1e.netlify.app
+- **Frontend**: https://inventory-system-pro.netlify.app
 - **Backend API**: https://inventory-backend-lx2t.onrender.com
 - **API Documentation**: https://inventory-backend-lx2t.onrender.com/docs
 - **Docker Hub Image**: shivu682/inventory-backend:latest
