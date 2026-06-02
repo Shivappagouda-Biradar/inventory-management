@@ -88,17 +88,25 @@ export default function Orders() {
           ) : (
             <table>
               <thead>
-                <tr><th>Order #</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr>
+                <tr>
+                  <th>Order #</th>
+                  <th>Customer</th>
+                  <th className="hide-mobile">Items</th>
+                  <th>Total</th>
+                  <th className="hide-mobile">Status</th>
+                  <th className="hide-mobile">Date</th>
+                  <th>Actions</th>
+                </tr>
               </thead>
               <tbody>
                 {orders.map(o => (
                   <tr key={o.id}>
                     <td>#{o.id}</td>
                     <td>{o.customer?.full_name || '—'}</td>
-                    <td>{o.items?.length || 0} item(s)</td>
+                    <td className="hide-mobile">{o.items?.length || 0} item(s)</td>
                     <td>${o.total_amount.toFixed(2)}</td>
-                    <td><span className="badge badge-success">{o.status}</span></td>
-                    <td>{new Date(o.created_at).toLocaleDateString()}</td>
+                    <td className="hide-mobile"><span className="badge badge-success">{o.status}</span></td>
+                    <td className="hide-mobile">{new Date(o.created_at).toLocaleDateString()}</td>
                     <td style={{ display: 'flex', gap: 8 }}>
                       <Link to={`/orders/${o.id}`} className="btn btn-secondary btn-sm">View</Link>
                       <button className="btn btn-danger btn-sm" onClick={() => handleDelete(o.id)}>Cancel</button>

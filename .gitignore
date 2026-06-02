@@ -1,8 +1,8 @@
-# Environment
+# ── Environment ──────────────────────────────
 .env
 *.env.local
 
-# Python
+# ── Python ────────────────────────────────────
 __pycache__/
 *.pyc
 *.pyo
@@ -11,13 +11,20 @@ venv/
 *.egg-info/
 .pytest_cache/
 
-# Node
+# ── SQLite local DB ───────────────────────────
+*.db
+
+# ── Node ──────────────────────────────────────
 node_modules/
 build/
+dist/
 
-# IDE
+# ── IDE / OS ──────────────────────────────────
 .vscode/
 .idea/
+.DS_Store
+Thumbs.db
 
-# Docker
+# ── Logs ──────────────────────────────────────
 *.log
+npm-debug.log*

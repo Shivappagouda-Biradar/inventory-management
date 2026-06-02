@@ -106,13 +106,19 @@ export default function Products() {
           ) : (
             <table>
               <thead>
-                <tr><th>Name</th><th>SKU</th><th>Price</th><th>Qty</th><th>Actions</th></tr>
+                <tr>
+                  <th>Name</th>
+                  <th className="hide-mobile">SKU</th>
+                  <th>Price</th>
+                  <th>Qty</th>
+                  <th>Actions</th>
+                </tr>
               </thead>
               <tbody>
                 {products.map(p => (
                   <tr key={p.id}>
                     <td>{p.name}</td>
-                    <td><code>{p.sku}</code></td>
+                    <td className="hide-mobile"><code>{p.sku}</code></td>
                     <td>${p.price.toFixed(2)}</td>
                     <td>
                       <span className={`badge ${p.quantity === 0 ? 'badge-danger' : p.quantity <= 10 ? 'badge-warning' : 'badge-success'}`}>

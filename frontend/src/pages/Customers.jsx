@@ -94,15 +94,21 @@ export default function Customers() {
           ) : (
             <table>
               <thead>
-                <tr><th>Full Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Actions</th></tr>
+                <tr>
+                  <th>Full Name</th>
+                  <th>Email</th>
+                  <th className="hide-mobile">Phone</th>
+                  <th className="hide-mobile">Joined</th>
+                  <th>Actions</th>
+                </tr>
               </thead>
               <tbody>
                 {customers.map(c => (
                   <tr key={c.id}>
                     <td>{c.full_name}</td>
                     <td>{c.email}</td>
-                    <td>{c.phone}</td>
-                    <td>{new Date(c.created_at).toLocaleDateString()}</td>
+                    <td className="hide-mobile">{c.phone}</td>
+                    <td className="hide-mobile">{new Date(c.created_at).toLocaleDateString()}</td>
                     <td>
                       <button className="btn btn-danger btn-sm" onClick={() => handleDelete(c.id, c.full_name)}>
                         Delete

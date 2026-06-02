@@ -40,7 +40,7 @@ export default function OrderDetail() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }} className="order-detail-grid">
         <div className="card">
           <div className="card-header">Order Info</div>
           <div className="card-body">
