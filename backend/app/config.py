@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # Local dev uses SQLite; production (Render/Railway) sets this to PostgreSQL URL
-    DATABASE_URL: str = "sqlite:///./inventory.db"
+    DATABASE_URL: str = "sqlite:////tmp/inventory.db"
     SECRET_KEY: str = "changeme-secret-key"
 
     class Config:
